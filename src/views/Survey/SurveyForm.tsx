@@ -1,17 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import LoginIcon from '@mui/icons-material/Login';
+import SendIcon from '@mui/icons-material/Send';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import ControllerSelect from 'components/Form/ControllerSelect';
 import ControllerTextField from 'components/Form/ControllerTextField';
 import Form from 'components/Form/Form';
+import FormGroup from 'components/Form/FormGroup';
+import FormLabel from 'components/Form/FormLabel';
+import Image from 'components/Image';
 import useMounted from 'hooks/useMounted';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { submitFormToGoogleSheet } from 'services';
 import Regexs from 'utils/Regexs';
 import wait from 'utils/wait';
 import * as yup from 'yup';
@@ -70,6 +72,7 @@ const SurveyForm = () => {
     try {
       setLoading(true);
       await wait(1500);
+      console.log(data);
 
       const formData = new FormData();
 
@@ -78,13 +81,7 @@ const SurveyForm = () => {
         formData.append(field, value);
       }
 
-      const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbxUYUP9efcDS0F6JLWfWYjRUZwN_Hy8FXOFp-zKgTWYFU1jNDIBMWuK1L8Xf0_9xjGW/exec',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const response = await submitFormToGoogleSheet(data);
 
       console.log(response);
     } catch (error) {
@@ -101,80 +98,97 @@ const SurveyForm = () => {
       sx={{
         height: 1,
         backgroundColor: 'background.default',
-        display: 'grid',
-        placeContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <Container maxWidth="sm">
-        <Paper elevation={16} sx={{ p: 4 }}>
-          <Box>
-            <Typography variant="h4" gutterBottom align="center">
-              Log in
-            </Typography>
-            <Typography color="text.secondary" variant="body2" align="center">
-              Sign in on the internal platform
-            </Typography>
+      <Container maxWidth="xs">
+        <Paper
+          elevation={16}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            boxShadow: '0px 10px 15px rgba(100, 116, 139, 0.12)',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Image
+              src="/static/images/SPHINX_Logo_CMYK-02.png"
+              sx={{ height: 35 }}
+            />
           </Box>
           <Box sx={{ mt: 3 }}>
             <Form noValidate onSubmit={handleSubmit(onSubmit)}>
-              <ControllerTextField
-                name="fullName"
-                control={control}
-                label="Họ và tên"
-                margin="normal"
-                required
-              />
-
-              <ControllerSelect
-                name="yearId"
-                control={control}
-                options={years}
-                selector={(year) => year.name}
-                placeholder="Vui lòng chọn năm học"
-                required
-              />
-
-              <ControllerTextField
-                name="email"
-                control={control}
-                label="Địa chỉ email"
-                margin="normal"
-                type="email"
-              />
-
-              <ControllerTextField
-                name="phone"
-                control={control}
-                label="Số điện thoại"
-                margin="normal"
-                required
-              />
-
-              <ControllerTextField
-                name="position"
-                control={control}
-                label="Vị trí muốn thực tập, thử việc"
-                margin="normal"
-                required
-              />
-
-              <Box sx={{ mt: 2 }}>
+              <FormGroup>
+                <FormLabel
+                  required
+                  title="Họ và tên"
+                  name="fullName"
+                  gutterBottom
+                />
+                <ControllerTextField name="fullName" control={control} />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel
+                  required
+                  title="Bạn đang học năm thứ mấy"
+                  name="yearId"
+                  gutterBottom
+                />
+                <ControllerSelect
+                  name="yearId"
+                  control={control}
+                  options={years}
+                  selector={(year) => year.name}
+                  placeholder="Vui lòng chọn năm học"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel
+                  required
+                  title="Địa chỉ email"
+                  name="email"
+                  gutterBottom
+                />
+                <ControllerTextField
+                  name="email"
+                  control={control}
+                  type="email"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel
+                  required
+                  title="Số điện thoại"
+                  name="phone"
+                  gutterBottom
+                />
+                <ControllerTextField name="phone" control={control} />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel
+                  required
+                  title="Vị trí muốn thực tập, thử việc"
+                  name="position"
+                  gutterBottom
+                />
+                <ControllerTextField name="position" control={control} />
+              </FormGroup>
+              <Box sx={{ mt: 2.5 }}>
                 <LoadingButton
                   loading={loading}
                   loadingPosition="start"
-                  startIcon={<LoginIcon />}
+                  startIcon={<SendIcon />}
                   fullWidth
                   size="large"
                   type="submit"
                   variant="contained"
+                  disableElevation
                 >
-                  Log In
+                  Gửi thông tin
                 </LoadingButton>
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                <Alert severity="info">
-                  <div>Message here</div>
-                </Alert>
               </Box>
             </Form>
           </Box>
