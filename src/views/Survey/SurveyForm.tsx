@@ -12,7 +12,6 @@ import Form from 'components/Form/Form';
 import useMounted from 'hooks/useMounted';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { submitFormToGoogleSheet } from 'services';
 import Regexs from 'utils/Regexs';
 import wait from 'utils/wait';
 import * as yup from 'yup';
@@ -71,7 +70,6 @@ const SurveyForm = () => {
     try {
       setLoading(true);
       await wait(1500);
-      console.log(data);
 
       const formData = new FormData();
 
@@ -80,7 +78,13 @@ const SurveyForm = () => {
         formData.append(field, value);
       }
 
-      const response = await submitFormToGoogleSheet(formData);
+      const response = await fetch(
+        'https://script.google.com/macros/s/AKfycbxUYUP9efcDS0F6JLWfWYjRUZwN_Hy8FXOFp-zKgTWYFU1jNDIBMWuK1L8Xf0_9xjGW/exec',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       console.log(response);
     } catch (error) {
