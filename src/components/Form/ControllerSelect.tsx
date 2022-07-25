@@ -7,7 +7,6 @@ import Select from '@mui/material/Select';
 import { Fragment } from 'react';
 import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import PlaceHolder from './PlaceHolder';
 
 interface Option extends FieldValues {
   id: number;
@@ -68,7 +67,7 @@ const ControllerSelect = <T extends FieldValues, O extends Option[]>(
             multiple={false}
             renderValue={(value) => {
               if (!value || value === -1 || !(value in labels)) {
-                return <PlaceHolder>{!disabled && placeholder}</PlaceHolder>;
+                return null;
               }
               return <Fragment>{labels[value].name}</Fragment>;
             }}

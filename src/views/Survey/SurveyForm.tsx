@@ -13,10 +13,10 @@ import Image from 'components/Image';
 import useMounted from 'hooks/useMounted';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { submitFormToGoogleSheet } from 'services';
 import Regexs from 'utils/Regexs';
 import wait from 'utils/wait';
 import * as yup from 'yup';
+import RandomGift from './RandomGift';
 
 interface FormValue {
   fullName: string;
@@ -34,32 +34,29 @@ const validationSchema = yup.object().shape({
     .string()
     .trim('schema.trim')
     .required('Bắt buộc')
-    .matches(Regexs.email, 'schema.validEmail')
-    .email('schema.validEmail')
+    .matches(Regexs.email, 'Địa chỉ email không hợp lệ')
+    .email('Địa chỉ email không hợp lệ')
     .default(''),
   phone: yup
     .string()
     .trim('schema.trim')
-    .strict(true)
     .required('Bắt buộc')
-    .matches(Regexs.phone, 'schema.onlyNumber')
+    .matches(Regexs.phone, 'Số điện thoại không hợp lệ')
     .default(''),
-  position: yup
-    .string()
-    .trim('schema.trim')
-    .strict(true)
-    .required('Bắt buộc')
-    .default(''),
+  position: yup.string().trim('schema.trim').required('Bắt buộc').default(''),
 });
 
 const SurveyForm = () => {
   const mounted = useMounted();
   const [loading, setLoading] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1);
+
   const [years] = useState([
     { id: 1, name: '1' },
     { id: 2, name: '2' },
     { id: 3, name: '3' },
     { id: 4, name: '4' },
+    { id: 5, name: '5' },
   ]);
 
   const { control, handleSubmit } = useForm<FormValue>({
@@ -81,9 +78,8 @@ const SurveyForm = () => {
         formData.append(field, value);
       }
 
-      const response = await submitFormToGoogleSheet(data);
-
-      console.log(response);
+      // const response = await submitFormToGoogleSheet(data);
+      setStep(2);
     } catch (error) {
       console.log(error);
     } finally {
@@ -92,6 +88,10 @@ const SurveyForm = () => {
       }
     }
   };
+
+  if (step === 2) {
+    return <RandomGift />;
+  }
 
   return (
     <Box
