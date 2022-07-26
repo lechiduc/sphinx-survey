@@ -38,22 +38,22 @@ const sheets: Record<string, string> = {
 };
 
 const validationSchema = yup.object().shape({
-  fullName: yup.string().trim('schema.trim').required('Bắt buộc').default(''),
+  fullName: yup.string().trim('').required('Bắt buộc').default(''),
   yearId: yup.number().required('Bắt buộc').nullable().default(null),
   email: yup
     .string()
-    .trim('schema.trim')
+    .trim('')
     .required('Bắt buộc')
     .matches(Regexs.email, 'Địa chỉ email không hợp lệ')
     .email('Địa chỉ email không hợp lệ')
     .default(''),
   phone: yup
     .string()
-    .trim('schema.trim')
+    .trim('')
     .required('Bắt buộc')
     .matches(Regexs.phone, 'Số điện thoại không hợp lệ')
     .default(''),
-  position: yup.string().trim('schema.trim').required('Bắt buộc').default(''),
+  position: yup.string().trim('').required('Bắt buộc').default(''),
 });
 
 const SurveyForm = () => {
@@ -97,6 +97,7 @@ const SurveyForm = () => {
       }
     } catch (error) {
       console.log(error);
+      setOpenSnackbar(true);
     } finally {
       if (mounted.current) {
         setLoading(false);
