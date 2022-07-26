@@ -10,11 +10,11 @@ import { useEffect, useState } from 'react';
 import sample from 'utils/sample';
 
 const gifts: Record<string, string> = {
-  1: 'Sổ tay',
-  2: 'Cốc',
-  3: 'Bình nước',
-  4: 'Quạt cầm tay',
-  5: 'Đồ ăn',
+  1: '/static/gifts/8.png',
+  2: '/static/gifts/9.png',
+  3: '/static/gifts/10.png',
+  4: '/static/gifts/11.png',
+  5: '/static/gifts/12.png',
 };
 
 const RandomGift = () => {
@@ -63,8 +63,8 @@ const RandomGift = () => {
                 align="center"
               >
                 Cảm ơn bạn đã quan tâm tới thông tin tuyển dụng của Sphinx,
-                chúng tôi gửi tặng bạn một món quà nho nhỏ, vui lòng chụp ảnh
-                màn hình và đổi quà tại khu vực lễ tân.
+                chúng tôi đã chuẩn bị cho bạn một món quà nho nhỏ, vui lòng chụp
+                ảnh màn hình và đổi quà tại gian hàng jobfair của Sphinx.
               </Typography>
               <Divider variant="middle" light>
                 <Typography
@@ -81,12 +81,18 @@ const RandomGift = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  height: 250,
+                  height: 320,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  mt: 3,
                 }}
               >
-                {giftId ? <Typography>{gifts[giftId]}</Typography> : null}
+                {giftId ? (
+                  <Image
+                    src={gifts[giftId]}
+                    sx={{ width: 1, height: 1, borderRadius: 1.5 }}
+                  />
+                ) : null}
               </Box>
             </Box>
           </Paper>

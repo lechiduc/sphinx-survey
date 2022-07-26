@@ -60,7 +60,7 @@ const SurveyForm = () => {
   const mounted = useMounted();
   const [loading, setLoading] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
 
   const [years] = useState([
     { id: 1, name: '1' },
