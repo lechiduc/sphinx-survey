@@ -4,6 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Snackbar from '@mui/material/Snackbar';
 import ControllerSelect from 'components/Form/ControllerSelect';
 import ControllerTextField from 'components/Form/ControllerTextField';
 import Form from 'components/Form/Form';
@@ -11,10 +12,11 @@ import FormGroup from 'components/Form/FormGroup';
 import FormLabel from 'components/Form/FormLabel';
 import Image from 'components/Image';
 import useMounted from 'hooks/useMounted';
+import type { SyntheticEvent } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { submitFormToGoogleSheet } from 'services';
 import Regexs from 'utils/Regexs';
-import wait from 'utils/wait';
 import * as yup from 'yup';
 import RandomGift from './RandomGift';
 
@@ -26,6 +28,14 @@ interface FormValue {
   position: string;
   [key: string]: any;
 }
+
+const sheets: Record<string, string> = {
+  fullName: 'Họ và tên',
+  yearId: 'Sinh viên năm',
+  email: 'Địa chỉ email',
+  phone: 'Số điện thoại',
+  position: 'Vị trí quan tâm',
+};
 
 const validationSchema = yup.object().shape({
   fullName: yup.string().trim('schema.trim').required('Bắt buộc').default(''),
@@ -49,6 +59,7 @@ const validationSchema = yup.object().shape({
 const SurveyForm = () => {
   const mounted = useMounted();
   const [loading, setLoading] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
 
   const [years] = useState([
@@ -68,18 +79,22 @@ const SurveyForm = () => {
   const onSubmit = async (data: FormValue) => {
     try {
       setLoading(true);
-      await wait(1500);
-      console.log(data);
 
       const formData = new FormData();
 
       for (const field in data) {
+        const key = sheets[field];
         const value = data[field];
-        formData.append(field, value);
+        formData.append(key, value);
       }
 
-      // const response = await submitFormToGoogleSheet(data);
-      setStep(2);
+      const response = await submitFormToGoogleSheet(formData);
+
+      if (response.result === 'success') {
+        setStep(2);
+      } else {
+        setOpenSnackbar(true);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -87,6 +102,14 @@ const SurveyForm = () => {
         setLoading(false);
       }
     }
+  };
+
+  const handleCloseSnackbar = (
+    _event: SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') return;
+    setOpenSnackbar(false);
   };
 
   if (step === 2) {
@@ -194,6 +217,13 @@ const SurveyForm = () => {
           </Box>
         </Paper>
       </Container>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        message="Đã xảy ra lỗi"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </Box>
   );
 };

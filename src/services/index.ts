@@ -1,16 +1,13 @@
 import HttpClient from 'utils/HttpClient';
 
+interface Response {
+  result: 'success' | 'error';
+}
 const submitFormToGoogleSheet = async (params: any) => {
-  return HttpClient.post<FormData, any>(
-    '/macros/library/d/1brIl4mbLdxMSs6AmM2HX67RI-jYirND3W2DPquS9men0BeH5mTsd9z1q/1',
+  return HttpClient.post<FormData, Response>(
+    '/macros/s/AKfycbzg0LQCEM5IfC6knVhHDha3uztsVWFDZZ4TlJ2rBIBKVdUQwSVNkGSSfDn6_lDZ2GV0Gg/exec',
     params,
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    }
+    { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
   );
 };
 

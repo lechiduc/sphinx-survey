@@ -62,8 +62,9 @@ const RandomGift = () => {
                 gutterBottom
                 align="center"
               >
-                Sphinx gửi tặng bạn một món quà nho nhỏ, vui lòng chụp ảnh màn
-                hình và đổi quà tại khu vực lễ tân.
+                Cảm ơn bạn đã quan tâm tới thông tin tuyển dụng của Sphinx,
+                chúng tôi gửi tặng bạn một món quà nho nhỏ, vui lòng chụp ảnh
+                màn hình và đổi quà tại khu vực lễ tân.
               </Typography>
               <Divider variant="middle" light>
                 <Typography
@@ -71,7 +72,10 @@ const RandomGift = () => {
                   sx={{ color: 'text.secondary' }}
                   align="center"
                 >
-                  from Sphinx with 💕
+                  from Sphinx with{' '}
+                  <Typography component="span" sx={{ color: 'primary.main' }}>
+                    ❤
+                  </Typography>
                 </Typography>
               </Divider>
               <Box
