@@ -25,7 +25,7 @@ interface FormValue {
   yearId: number | null;
   email: string;
   phone: string;
-  position: string;
+  positionId: number | null;
   [key: string]: any;
 }
 
@@ -34,7 +34,7 @@ const sheets: Record<string, string> = {
   yearId: 'Sinh viên năm',
   email: 'Địa chỉ email',
   phone: 'Số điện thoại',
-  position: 'Vị trí quan tâm',
+  positionId: 'Vị trí quan tâm',
 };
 
 const validationSchema = yup.object().shape({
@@ -53,7 +53,7 @@ const validationSchema = yup.object().shape({
     .required('Bắt buộc')
     .matches(Regexs.phone, 'Số điện thoại không hợp lệ')
     .default(''),
-  position: yup.string().trim('').required('Bắt buộc').default(''),
+  positionId: yup.number().required('Bắt buộc').nullable().default(null),
 });
 
 const SurveyForm = () => {
@@ -68,6 +68,16 @@ const SurveyForm = () => {
     { id: 3, name: '3' },
     { id: 4, name: '4' },
     { id: 5, name: '5' },
+  ]);
+
+  const [positions] = useState([
+    { id: 1, name: 'Lập trình Java' },
+    { id: 2, name: 'Lập trình Reactjs' },
+    { id: 3, name: 'Lập trình .NET' },
+    { id: 4, name: 'Lập trình mobile' },
+    { id: 5, name: 'Business Analyst' },
+    { id: 6, name: 'Tester' },
+    { id: 7, name: 'Khác' },
   ]);
 
   const { control, handleSubmit } = useForm<FormValue>({
@@ -85,7 +95,15 @@ const SurveyForm = () => {
       for (const field in data) {
         const key = sheets[field];
         const value = data[field];
-        formData.append(key, value);
+
+        if (field === 'positionId') {
+          const position = positions.find((position) => position.id === value);
+          if (position) {
+            formData.append(key, position.name);
+          }
+        } else {
+          formData.append(key, value);
+        }
       }
 
       const response = await submitFormToGoogleSheet(formData);
@@ -195,10 +213,16 @@ const SurveyForm = () => {
                 <FormLabel
                   required
                   title="Vị trí muốn thực tập, thử việc"
-                  name="position"
+                  name="positionId"
                   gutterBottom
                 />
-                <ControllerTextField name="position" control={control} />
+                <ControllerSelect
+                  name="positionId"
+                  control={control}
+                  options={positions}
+                  selector={(year) => year.name}
+                  placeholder="Vui lòng chọn vị trí"
+                />
               </FormGroup>
               <Box sx={{ mt: 2.5 }}>
                 <LoadingButton
