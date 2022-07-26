@@ -74,7 +74,7 @@ const SurveyForm = () => {
     { id: 1, name: 'Lập trình Java' },
     { id: 2, name: 'Lập trình Reactjs' },
     { id: 3, name: 'Lập trình .NET' },
-    { id: 4, name: 'Lập trình mobile' },
+    { id: 4, name: 'Lập trình Mobile' },
     { id: 5, name: 'Business Analyst' },
     { id: 6, name: 'Tester' },
     { id: 7, name: 'Khác' },

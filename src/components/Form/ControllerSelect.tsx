@@ -65,6 +65,14 @@ const ControllerSelect = <T extends FieldValues, O extends Option[]>(
               IconComponent: () => null,
             })}
             multiple={false}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 36 * 5 + 16,
+                  overflowY: 'auto',
+                },
+              },
+            }}
             renderValue={(value) => {
               if (!value || value === -1 || !(value in labels)) {
                 return null;
