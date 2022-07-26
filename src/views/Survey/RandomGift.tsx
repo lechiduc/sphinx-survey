@@ -91,6 +91,7 @@ const RandomGift = () => {
                   <Image
                     src={gifts[giftId]}
                     sx={{ width: 1, height: 1, borderRadius: 1.5 }}
+                    loading="lazy"
                   />
                 ) : null}
               </Box>
