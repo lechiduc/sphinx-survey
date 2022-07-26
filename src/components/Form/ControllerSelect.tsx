@@ -66,6 +66,7 @@ const ControllerSelect = <T extends FieldValues, O extends Option[]>(
             })}
             multiple={false}
             MenuProps={{
+              disableAutoFocusItem: true,
               PaperProps: {
                 style: {
                   maxHeight: 36 * 5 + 16,
